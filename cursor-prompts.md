@@ -1,8 +1,24 @@
+## Prompts to Cursor AI
+
 2025-05
 
-Prompts to Cursor that I used to generate and refine this program:
+I used Cursor AI to generate this program, with mostly no actual code
+written by me.
 
-Write a python script that prints estimated retirement balance by year. It should use the argparse module to allow the user to specify the values for current age, final age, current balance, yearly contribution amount, and yearly return.
+The AI/LLM models configured for use in Cursor were the following:
+
+* claude-3.5-sonnet
+* claude-4-opus-thinking
+* claude-4-sonnet-thinking
+* gemini-2.5-pro-preview-05-06
+* gpt-4.1
+* gpt-4o
+* o3
+
+
+### Prompts given:
+
+
 Write a python script that prints estimated retirement balance by year. It should use the argparse module to allow the user to specify the values for current age, final age, current balance, yearly contribution amount, and yearly return.
 
 Show me the example output.
