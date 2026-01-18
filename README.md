@@ -16,6 +16,8 @@ usage: retirement_balance.py [-h] --current-age CURRENT_AGE --final-age
                              --retirement-return RETIREMENT_RETURN --tax-rate
                              TAX_RATE --withdrawal-increase
                              WITHDRAWAL_INCREASE
+                             [--current-after-tax-balance CURRENT_AFTER_TAX_BALANCE]
+                             [--yearly-contribution-after-tax YEARLY_CONTRIBUTION_AFTER_TAX]
 
 Calculate retirement balance projections
 
@@ -26,9 +28,9 @@ optional arguments:
   --final-age FINAL_AGE
                         Target final age for projections
   --current-balance CURRENT_BALANCE
-                        Current retirement account balance
+                        Current total retirement account balance (pre-tax + after-tax)
   --yearly-contribution YEARLY_CONTRIBUTION
-                        Amount contributed per year
+                        Amount contributed per year (pre-tax)
   --yearly-return YEARLY_RETURN
                         Expected yearly return rate during accumulation as a
                         percentage (e.g., 7 for 7%)
@@ -45,8 +47,78 @@ optional arguments:
   --withdrawal-increase WITHDRAWAL_INCREASE
                         Annual increase in withdrawal amount as a percentage
                         (e.g., 2 for 2%)
+  --current-after-tax-balance CURRENT_AFTER_TAX_BALANCE
+                        Current Roth (after-tax) account balance (default: 0)
+  --yearly-contribution-after-tax YEARLY_CONTRIBUTION_AFTER_TAX
+                        Amount contributed per year to Roth (after-tax)
+                        accounts (default: 0)
+  --verbose             Show detailed breakdown of pre-tax and after-tax balances
 
 ```
+
+## Roth (After-Tax) Contributions
+
+The calculator supports tracking Roth IRA and Roth 401(k) contributions separately from traditional pre-tax contributions. This provides more accurate retirement projections since:
+
+- **During accumulation**: Both pre-tax and after-tax contributions grow at the same rate
+- **During retirement**: Withdrawals are taken proportionally from both accounts
+- **Tax calculation**: Only the pre-tax portion of withdrawals is taxed
+
+This results in lower taxes during retirement when you have a significant Roth balance.
+
+### Example with Roth Contributions
+
+If you have $1,225,000 total balance with $300,000 in Roth accounts:
+
+```bash
+./retirement_balance.py \
+    --current-age 56 \
+    --final-age 70 \
+    --current-balance 1225000 \
+    --current-after-tax-balance 300000 \
+    --yearly-contribution 30000 \
+    --yearly-contribution-after-tax 7000 \
+    --yearly-return 7.0 \
+    --retirement-age 67 \
+    --withdrawal-rate 4.5 \
+    --withdrawal-increase 2.0 \
+    --retirement-return 4.0 \
+    --tax-rate 25.0
+```
+
+This shows approximately 24.5% of your balance is in Roth accounts, which reduces your tax burden during retirement. In the first year of retirement, this could save over $8,400 in taxes compared to having all pre-tax contributions.
+
+## Verbose Output
+
+Use the `--verbose` flag to see a detailed breakdown of pre-tax and after-tax balances for each year. This is particularly useful when tracking Roth contributions to see how each account grows and is depleted over time.
+
+```bash
+./retirement_balance.py \
+    --current-age 56 \
+    --final-age 70 \
+    --current-balance 1225000 \
+    --current-after-tax-balance 300000 \
+    --yearly-contribution 30000 \
+    --yearly-contribution-after-tax 7000 \
+    --yearly-return 7.0 \
+    --retirement-age 67 \
+    --withdrawal-rate 4.5 \
+    --withdrawal-increase 2.0 \
+    --retirement-return 4.0 \
+    --tax-rate 25.0 \
+    --verbose
+```
+
+Output shows Pre-Tax and After-Tax columns:
+```
+ Age            Balance            Pre-Tax          After-Tax          Yearly         Monthly       After Tax
+--------------------------------------------------------------------------------------------------------------
+  66    $  2,956,753.59    $  2,263,122.99    $    693,630.60    $      0.00    $      0.00    $      0.00
+  67    $  3,203,316.34    $  2,453,641.59    $    749,674.74    $144,149.24    $ 12,012.44    $  9,712.15
+  68    $  3,181,533.79    $  2,436,956.83    $    744,576.96    $147,032.22    $ 12,252.68    $  9,906.39
+```
+
+This clearly shows that at age 67, 76.6% of the balance ($2,453,641.59) is pre-tax and 23.4% ($749,674.74) is after-tax (Roth), resulting in proportional tax-aware withdrawals.
 
 ## Sample Output
 
@@ -135,3 +207,49 @@ Withdrawal Increase: 2.0%
   95    $    774,219.33    $291,696.41    $ 24,308.03    $ 18,960.27
 
 ```
+
+### Sample Output with Roth Contributions
+
+When including Roth (after-tax) contributions, the output shows the breakdown:
+
+```
+$ ./retirement_balance.py --current-age 56 --final-age 70 --current-balance 1225000 --current-after-tax-balance 300000 --yearly-contribution 30000 --yearly-contribution-after-tax 7000 --yearly-return 7.0 --retirement-age 67 --withdrawal-rate 4.5 --withdrawal-increase 2.0 --retirement-return 4.0 --tax-rate 25.0
+
+Retirement Balance Projections:
+Current Age: 56
+Final Age: 70
+Current Balance: $1,225,000.00
+  Pre-tax: $925,000.00
+  After-tax (Roth): $300,000.00
+Yearly Contribution: $30,000.00
+  Pre-tax: $30,000.00
+  After-tax (Roth): $7,000.00
+Yearly Return: 7.0%
+Retirement Age: 67
+Withdrawal Rate: 4.5%
+Retirement Return: 4.0%
+Tax Rate: 25.0%
+Withdrawal Increase: 2.0%
+
+ Age            Balance          Yearly         Monthly       After Tax
+----------------------------------------------------------------------
+  56    $  1,225,000.00    $      0.00    $      0.00    $      0.00
+  57    $  1,350,340.00    $      0.00    $      0.00    $      0.00
+  58    $  1,484,453.80    $      0.00    $      0.00    $      0.00
+  59    $  1,627,955.57    $      0.00    $      0.00    $      0.00
+  60    $  1,781,502.46    $      0.00    $      0.00    $      0.00
+  61    $  1,945,797.63    $      0.00    $      0.00    $      0.00
+  62    $  2,121,593.46    $      0.00    $      0.00    $      0.00
+  63    $  2,309,695.00    $      0.00    $      0.00    $      0.00
+  64    $  2,510,963.65    $      0.00    $      0.00    $      0.00
+  65    $  2,726,321.11    $      0.00    $      0.00    $      0.00
+  66    $  2,956,753.59    $      0.00    $      0.00    $      0.00
+  67    $  3,203,316.34    $144,149.24    $ 12,012.44    $  9,712.15
+  68    $  3,181,533.79    $147,032.22    $ 12,252.68    $  9,906.39
+  69    $  3,155,881.63    $149,972.86    $ 12,497.74    $ 10,104.52
+  70    $  3,126,145.12    $152,972.32    $ 12,747.69    $ 10,306.61
+
+```
+
+Note: At age 67, the after-tax monthly income is $9,712.15 compared to $9,009.33 without Roth contributions (same total balance and withdrawal amount). This is a savings of $702.82/month or $8,434/year due to the tax-free Roth withdrawals.
+
