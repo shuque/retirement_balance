@@ -62,15 +62,18 @@ def calculate_retirement_balance(
                 # Increase withdrawal by inflation rate
                 base_withdrawal *= (1 + withdrawal_increase)
             withdrawal = base_withdrawal
-            balance -= withdrawal
             after_tax_monthly = (withdrawal * (1 - tax_rate)) / 12
-            
-        # Record the balance before adding contributions and returns
+
+        # Record the balance at the start of the year
         projections.append((age, balance, withdrawal, after_tax_monthly))
 
-        # Add yearly contribution at the end of the year (before retirement)
+        # Apply contributions/withdrawals
         if age < retirement_age:
+            # Add yearly contribution during accumulation phase
             balance += yearly_contribution
+        else:
+            # Subtract withdrawal during retirement phase
+            balance -= withdrawal
 
         # Apply yearly return based on phase
         if age < retirement_age:
