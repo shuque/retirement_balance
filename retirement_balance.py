@@ -123,72 +123,84 @@ def main():
         '--current-age',
         type=int,
         required=True,
+        metavar='AGE',
         help='Current age'
     )
     parser.add_argument(
         '--final-age',
         type=int,
         required=True,
+        metavar='AGE',
         help='Target final age for projections'
     )
     parser.add_argument(
         '--current-balance',
         type=float,
         required=True,
+        metavar='AMOUNT',
         help='Current retirement account balance'
     )
     parser.add_argument(
         '--yearly-contribution',
         type=float,
         required=True,
+        metavar='AMOUNT',
         help='Amount contributed per year'
     )
     parser.add_argument(
         '--yearly-return',
         type=float,
         required=True,
+        metavar='RATE',
         help='Expected yearly return rate during accumulation as a percentage (e.g., 7 for 7%%)'
     )
     parser.add_argument(
         '--retirement-age',
         type=int,
         required=True,
+        metavar='AGE',
         help='Age at which to start withdrawals'
     )
     parser.add_argument(
         '--withdrawal-rate',
         type=float,
         required=True,
+        metavar='RATE',
         help='Annual withdrawal rate as a percentage (e.g., 4 for 4%%)'
     )
     parser.add_argument(
         '--retirement-return',
         type=float,
         required=True,
+        metavar='RATE',
         help='Expected yearly return rate during retirement as a percentage (e.g., 4 for 4%%)'
     )
     parser.add_argument(
         '--tax-rate',
         type=float,
         required=True,
+        metavar='RATE',
         help='Tax rate on withdrawals as a percentage (e.g., 22 for 22%%)'
     )
     parser.add_argument(
         '--withdrawal-increase',
         type=float,
         required=True,
+        metavar='RATE',
         help='Annual increase in withdrawal amount as a percentage (e.g., 2 for 2%%)'
     )
     parser.add_argument(
         '--current-after-tax-balance',
         type=float,
         default=0.0,
+        metavar='AMOUNT',
         help='Current Roth (after-tax) account balance (default: 0)'
     )
     parser.add_argument(
         '--yearly-contribution-after-tax',
         type=float,
         default=0.0,
+        metavar='AMOUNT',
         help='Amount contributed per year to Roth (after-tax) accounts (default: 0)'
     )
     parser.add_argument(
